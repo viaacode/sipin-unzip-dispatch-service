@@ -24,7 +24,7 @@ pipeline {
           labels:
             component: builder
             lang: ${getBaseImageName()}
-            app: sipin-unzip-service
+            app: sipin-unzip-dispatch-service
         spec:
           containers:
           - name: default
@@ -51,8 +51,7 @@ pipeline {
         BASE_IMG_NAME = "${getBaseImageName()}"
         OC_URL = 'https://c113-e.private.eu-de.containers.cloud.ibm.com:30227'
         JIRA_URL = 'meemoo.atlassian.net'
-        APP_NAME = 'sipin-unzip-service'
-        LEGACY_APP_NAME = 'legacy-sipin-unzip-service'
+        APP_NAME = 'sipin-unzip-dispatch-service'
     }
 
     stages {
@@ -113,7 +112,6 @@ pipeline {
                         remoteInt.user = SSH_USER
                     }
                     sshCommand remote: remoteInt, command: "cd /opt/sipin/ && ./deploy_single.sh $APP_NAME"
-                    sshCommand remote: remoteInt, command: "cd /opt/legacy-sipin/ && ./deploy_single.sh $LEGACY_APP_NAME"
                 }
             }
             post {
@@ -139,7 +137,6 @@ pipeline {
                         remoteQas.user = SSH_USER
                     }
                     sshCommand remote: remoteQas, command: "cd /opt/sipin/ && ./deploy_single.sh $APP_NAME"
-                    sshCommand remote: remoteQas, command: "cd /opt/legacy-sipin/ && ./deploy_single.sh $LEGACY_APP_NAME"
                 }
             }
             post {
@@ -162,7 +159,6 @@ pipeline {
                         remotePrd.user = SSH_USER
                     }
                     sshCommand remote: remotePrd, command: "cd /opt/sipin/ && ./deploy_single.sh $APP_NAME"
-                    sshCommand remote: remotePrd, command: "cd /opt/legacy-sipin/ && ./deploy_single.sh $LEGACY_APP_NAME"
                 }
             }
         }
@@ -220,6 +216,5 @@ void tagNewImage(String environment) {
     sh """#!/bin/bash
     oc project $OC_PROJECT
     oc tag $APP_NAME:$GIT_SHORT_COMMIT $APP_NAME:${environment}
-    oc tag $APP_NAME:$GIT_SHORT_COMMIT $LEGACY_APP_NAME:${environment}
     """
 }
