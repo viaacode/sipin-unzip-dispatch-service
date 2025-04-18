@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject plugin="workflow-multibranch">
     <actions/>
-    <description>Job for sipin-unzip-service</description>
+    <description>Job for sipin-unzip-dispatch-service</description>
     <properties>
         <org.jenkinsci.plugins.docker.workflow.declarative.FolderConfig plugin="docker-workflow">
             <dockerLabel></dockerLabel>
@@ -33,12 +33,12 @@
         <data>
             <jenkins.branch.BranchSource>
                 <source class="org.jenkinsci.plugins.github_branch_source.GitHubSCMSource" plugin="github-branch-source">
-                    <id>315508d1-9692-4d0b-b493-19a27be4d99b</id>
+                    <id>b9cb833d-31cc-4912-bbd8-7af4d5f4b28f</id>
                     <apiUri>https://api.github.com</apiUri>
                     <credentialsId>meemoo-ci</credentialsId>
                     <repoOwner>viaacode</repoOwner>
-                    <repository>sipin-unzip-service</repository>
-                    <repositoryUrl>https://github.com/viaacode/sipin-unzip-service</repositoryUrl>
+                    <repository>sipin-unzip-dispatch-service</repository>
+                    <repositoryUrl>https://github.com/viaacode/sipin-unzip-dispatch-service</repositoryUrl>
                     <traits>
                         <org.jenkinsci.plugins.github__branch__source.BranchDiscoveryTrait>
                             <strategyId>3</strategyId>
@@ -89,6 +89,6 @@
     </sources>
     <factory class="org.jenkinsci.plugins.workflow.multibranch.WorkflowBranchProjectFactory">
         <owner class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" reference="../.."/>
-        <scriptPath>openshift/Jenkinsfile</scriptPath>
+        <scriptPath>.openshift/Jenkinsfile</scriptPath>
     </factory>
 </org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject>
