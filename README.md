@@ -1,8 +1,8 @@
-# Unzip service
+# Unzip dispatch service
 
 ## Synopsis
 
-Subscribes to a Pulsar topic to get notified of incoming zip files which get extracted to a specified folder. An event is published to Pulsar to make it known the extraction was succesful.
+Subscribes to a Pulsar topic to get notified of incoming zip files which get extracted to a specified folder. An event is published to Pulsar to make it known the extraction was successful.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ Subscribes to a Pulsar topic to get notified of incoming zip files which get ext
 
 1. Clone this repository with:
 
-   `$ git clone https://github.com/viaacode/unzip-service.git`
+   `$ git clone https://github.com/viaacode/sipin-unzip-dispatch-service.git`
 
 2. Change into the new directory.
 
@@ -61,8 +61,8 @@ is < 3. In that case, you probably also want to use `pip3` command.
 
 1. Build the container:
 
-   `$ docker build -t unzip-service .`
+   `$ docker build -t sipin-unzip-dispatch-service .`
 
 2. Run the container (with specified `.env` file):
 
-   `$ docker run --env-file .env unzip-service:latest`
+   `$ docker run --env-file .env sipin-unzip-dispatch-service:latest`
