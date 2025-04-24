@@ -1,0 +1,26 @@
+[project]
+name = "sipin-unzip-dispatch-service"
+version = "0.1.0"
+description = "A service that unzips a zipped meemoo SIP. It also notifies the correct ingest flow depending on the major version of the SIP."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "viaa-chassis==0.2.0rc1",
+    "pulsar-client~=3",
+    "retry~=0.9",
+    "meemoo-cloudevents==0.1.0rc3"
+]
+classifiers = [
+  "Programming Language :: Python :: 3.12",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "ruff~=0.11",
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--rootdir=./app/ -v"
+testpaths = ["tests"]
