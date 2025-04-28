@@ -6,8 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "viaa-chassis==0.2.0rc1",
-    "pulsar-client~=3",
-    "retry~=0.9",
+    "pulsar-client>=3.6.1, < 4",
+    "retry>=0.9.2, < 0.10",
     "meemoo-cloudevents==0.1.0rc3"
 ]
 classifiers = [
@@ -17,7 +17,7 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-    "ruff~=0.11",
+    "ruff>=0.11.7, < 0.12",
 ]
 
 [tool.pytest.ini_options]
