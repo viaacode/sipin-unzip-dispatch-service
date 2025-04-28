@@ -1,4 +1,4 @@
-FROM python:3.7.10-slim-buster
+FROM python:3.12-slim
 
 # This is the location where our files will go in the container.
 WORKDIR /app
@@ -8,7 +8,7 @@ COPY . .
 
 # We install all our Python dependencies. Add the extra index url because some
 # packages are in the meemoo repo.
-RUN pip3 install -r requirements.txt \
+RUN pip3 install -e . \
     --extra-index-url http://do-prd-mvn-01.do.viaa.be:8081/repository/pypi-all/simple \
     --trusted-host do-prd-mvn-01.do.viaa.be
     
