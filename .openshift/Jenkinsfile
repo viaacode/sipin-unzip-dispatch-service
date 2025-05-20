@@ -195,7 +195,7 @@ pipeline {
 }
 
 void getImageFromDockerfile() {
-    return 'python:3.7'
+    return 'python:3.12'
 }
 void getBaseImageName() {
     return getImageFromDockerfile().split(':')[0]

@@ -8,7 +8,7 @@ Subscribes to a Pulsar topic to get notified of incoming zip files which get ext
 
 - Git
 - Docker (optional)
-- Python 3.6+ (**Python 3.9 and up not yet supported**)
+- Python 3.12+
 - Access to the [meemoo PyPi](http://do-prd-mvn-01.do.viaa.be:8081)
 
 ## Usage
@@ -43,10 +43,10 @@ is < 3. In that case, you probably also want to use `pip3` command.
 3. Install the external modules:
 
     ```
-    $ pip install -r requirements.txt \
+    $ pip install -e . \
         --extra-index-url http://do-prd-mvn-01.do.viaa.be:8081/repository/pypi-all/simple \
         --trusted-host do-prd-mvn-01.do.viaa.be && \
-      pip install -r requirements-test.txt
+      pip install -e ".[dev]"
     ```
 
 4. Run the tests with:
