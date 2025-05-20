@@ -111,18 +111,38 @@ def handle_event(event: Event) -> bool:
     filename_mets_2_x = Path(extract_path, "METS.xml")
 
     if filename_mets_1_x.exists():
-        send_event(producer_1_x, data, outcome, event.correlation_id)
+        send_event(
+            producer_1_x,
+            configParser.app_cfg["unzip-service"]["producer_topic_1_x"],
+            data,
+            outcome,
+            event.correlation_id,
+        )
     elif filename_mets_2_x.exists():
-        send_event(producer_2_x, data, outcome, event.correlation_id)
+        send_event(
+            producer_2_x,
+            configParser.app_cfg["unzip-service"]["producer_topic_2_x"],
+            data,
+            outcome,
+            event.correlation_id,
+        )
     else:
-        send_event(producer_2_x, data, outcome, event.correlation_id)
+        send_event(
+            producer_2_x,
+            configParser.app_cfg["unzip-service"]["producer_topic_2_x"],
+            data,
+            outcome,
+            event.correlation_id,
+        )
 
     return outcome == EventOutcome.SUCCESS
 
 
-def send_event(producer, data: dict, outcome: EventOutcome, correlation_id: str):
+def send_event(
+    producer, type: str, data: dict, outcome: EventOutcome, correlation_id: str
+):
     attributes = EventAttributes(
-        type=configParser.app_cfg["unzip-service"]["producer_topic"],
+        type=type,
         source=APP_NAME,
         subject=data["source"],
         correlation_id=correlation_id,
