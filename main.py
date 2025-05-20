@@ -107,8 +107,8 @@ def handle_event(event: Event) -> bool:
         log.warning(data["message"])
 
     # Check if SIP 1.X or 2.X
-    filename_mets_1_x = os.path.join(extract_path, "data", "mets.xml")
-    filename_mets_2_x = os.path.join(extract_path, "METS.xml")
+    filename_mets_1_x = Path(extract_path, "data", "mets.xml")
+    filename_mets_2_x = Path(extract_path, "METS.xml")
 
     if filename_mets_1_x.exists():
         send_event(producer_1_x, data, outcome, event.correlation_id)
