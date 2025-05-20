@@ -25,17 +25,8 @@ client = pulsar.Client(
 
 
 @retry(pulsar.ConnectError, tries=10, delay=1, backoff=2)
-def create_producer_1_x():
-    return client.create_producer(
-        configParser.app_cfg["unzip-service"]["producer_topic_1_x"]
-    )
-
-
-@retry(pulsar.ConnectError, tries=10, delay=1, backoff=2)
-def create_producer_2_x():
-    return client.create_producer(
-        configParser.app_cfg["unzip-service"]["producer_topic_2_x"]
-    )
+def create_producer(topic: str):
+    return client.create_producer(topic)
 
 
 @retry(pulsar.ConnectError, tries=10, delay=1, backoff=2)
@@ -46,8 +37,11 @@ def subscribe():
     )
 
 
-producer_1_x = create_producer_1_x()
-producer_2_x = create_producer_2_x()
+producer_topic_1_x = configParser.app_cfg["unzip-service"]["producer_topic_1_x"]
+producer_topic_2_x = configParser.app_cfg["unzip-service"]["producer_topic_2_x"]
+
+producer_1_x = create_producer(producer_topic_1_x)
+producer_2_x = create_producer(producer_topic_2_x)
 
 consumer = subscribe()
 
@@ -113,7 +107,7 @@ def handle_event(event: Event) -> bool:
     if filename_mets_1_x.exists():
         send_event(
             producer_1_x,
-            configParser.app_cfg["unzip-service"]["producer_topic_1_x"],
+            producer_topic_1_x,
             data,
             outcome,
             event.correlation_id,
@@ -121,7 +115,7 @@ def handle_event(event: Event) -> bool:
     elif filename_mets_2_x.exists():
         send_event(
             producer_2_x,
-            configParser.app_cfg["unzip-service"]["producer_topic_2_x"],
+            producer_topic_2_x,
             data,
             outcome,
             event.correlation_id,
@@ -129,7 +123,7 @@ def handle_event(event: Event) -> bool:
     else:
         send_event(
             producer_2_x,
-            configParser.app_cfg["unzip-service"]["producer_topic_2_x"],
+            producer_topic_2_x,
             data,
             outcome,
             event.correlation_id,
