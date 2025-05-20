@@ -25,9 +25,16 @@ client = pulsar.Client(
 
 
 @retry(pulsar.ConnectError, tries=10, delay=1, backoff=2)
-def create_producer():
+def create_producer_1_x():
     return client.create_producer(
-        configParser.app_cfg["unzip-service"]["producer_topic"]
+        configParser.app_cfg["unzip-service"]["producer_topic_1_x"]
+    )
+
+
+@retry(pulsar.ConnectError, tries=10, delay=1, backoff=2)
+def create_producer_2_x():
+    return client.create_producer(
+        configParser.app_cfg["unzip-service"]["producer_topic_2_x"]
     )
 
 
@@ -39,7 +46,9 @@ def subscribe():
     )
 
 
-producer = create_producer()
+producer_1_x = create_producer_1_x()
+producer_2_x = create_producer_2_x()
+
 consumer = subscribe()
 
 
@@ -97,11 +106,21 @@ def handle_event(event: Event) -> bool:
         data["message"] = f"Error when unzipping: {str(e)}"
         log.warning(data["message"])
 
-    send_event(data, outcome, event.correlation_id)
+    # Check if SIP 1.X or 2.X
+    filename_mets_1_x = os.path.join(extract_path, "data", "mets.xml")
+    filename_mets_2_x = os.path.join(extract_path, "METS.xml")
+
+    if filename_mets_1_x.exists():
+        send_event(producer_1_x, data, outcome, event.correlation_id)
+    elif filename_mets_2_x.exists():
+        send_event(producer_2_x, data, outcome, event.correlation_id)
+    else:
+        send_event(producer_2_x, data, outcome, event.correlation_id)
+
     return outcome == EventOutcome.SUCCESS
 
 
-def send_event(data: dict, outcome: EventOutcome, correlation_id: str):
+def send_event(producer, data: dict, outcome: EventOutcome, correlation_id: str):
     attributes = EventAttributes(
         type=configParser.app_cfg["unzip-service"]["producer_topic"],
         source=APP_NAME,

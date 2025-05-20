@@ -7,6 +7,7 @@ app:
         port: !ENV ${PULSAR_PORT}
     unzip-service:
         consumer_topic: !ENV ${UNZIP_CONSUMER_TOPIC}
-        producer_topic: !ENV ${UNZIP_PRODUCER_TOPIC}
+        producer_topic_1_x: !ENV ${UNZIP_PRODUCER_TOPIC_1_X}
+        producer_topic_2_x: !ENV ${UNZIP_PRODUCER_TOPIC_2_X}
         target_folder: !ENV ${UNZIP_TARGET_FOLDER}
         sleep_time: !ENV ${UNZIP_SLEEP_TIME}
