@@ -162,7 +162,7 @@ def send_event(
 
 def calc_amount_of_files(folder: Path) -> int:
     count = 0
-    for p in folder.glob("**/representations/**/data/**/*"):
+    for p in folder.glob("**/representations/representation_*/data/*"):
         if p.is_file():
             count += 1
     return count
