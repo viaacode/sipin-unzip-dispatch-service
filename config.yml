@@ -10,4 +10,4 @@ app:
         producer_topic_1_x: !ENV ${UNZIP_PRODUCER_TOPIC_1_X}
         producer_topic_2_x: !ENV ${UNZIP_PRODUCER_TOPIC_2_X}
         target_folder: !ENV ${UNZIP_TARGET_FOLDER}
-        sleep_time: !ENV ${UNZIP_SLEEP_TIME}
+        sleep_time_coefficient: !ENV ${UNZIP_SLEEP_TIME_COEFFICIENT}
