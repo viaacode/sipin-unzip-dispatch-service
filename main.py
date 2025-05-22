@@ -19,6 +19,8 @@ configParser = ConfigParser()
 log = logging.get_logger(__name__, config=configParser)
 
 APP_NAME = "unzip-service"
+
+# Pulsar consumers and producers
 client = pulsar.Client(
     f"pulsar://{configParser.app_cfg['pulsar']['host']}:{configParser.app_cfg['pulsar']['port']}"
 )
@@ -45,8 +47,13 @@ producer_2_x = create_producer(producer_topic_2_x)
 
 consumer = subscribe()
 
+# Sleep time config
+sleep_time_coefficient = int(
+    configParser.app_cfg["unzip-service"]["sleep_time_coefficient"]
+)
 
-def handle_event(event: Event) -> bool:
+
+def handle_event(event: Event) -> (bool, Path):
     """
     Handles an incoming pulsar event.
     If the event has a succesful outcome, the incoming zip will be extracted and an event will be produced.
@@ -129,7 +136,7 @@ def handle_event(event: Event) -> bool:
             event.correlation_id,
         )
 
-    return outcome == EventOutcome.SUCCESS
+    return (outcome == EventOutcome.SUCCESS, extract_path)
 
 
 def send_event(
@@ -153,18 +160,38 @@ def send_event(
     )
 
 
+def calc_amount_of_files(folder: Path) -> int:
+    count = 0
+    for p in folder.glob("**/representations/**/data/**/*"):
+        if p.is_file():
+            count += 1
+    return count
+
+
+def calc_sleep(amount_of_files: int) -> int:
+    sleep = 300
+    if amount_of_files < 10:
+        return 30
+    elif amount_of_files < 100:
+        return 120
+    return sleep * sleep_time_coefficient
+
+
 if __name__ == "__main__":
     try:
         while True:
             msg = consumer.receive()
             event = PulsarBinding.from_protocol(msg)
 
-            result = handle_event(event)
+            result_status, extract_path = handle_event(event)
 
             consumer.acknowledge(msg)
 
-            if result:
-                time.sleep(int(configParser.app_cfg["unzip-service"]["sleep_time"]))
+            if result_status:
+                files_found = calc_amount_of_files(extract_path)
+                time_to_sleep = calc_sleep(files_found)
+                log.debug(f"Amount of files found: {files_found}. Time to sleep: {time_to_sleep}")
+                time.sleep(time_to_sleep)
     except KeyboardInterrupt:
         client.close()
         exit()
