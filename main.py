@@ -136,7 +136,7 @@ def handle_event(event: Event) -> (bool, Path):
             event.correlation_id,
         )
 
-    return (outcome == EventOutcome.SUCCESS, extract_path)
+    return (outcome == EventOutcome.SUCCESS, Path(extract_path))
 
 
 def send_event(
