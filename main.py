@@ -53,14 +53,14 @@ sleep_time_coefficient = int(
 )
 
 
-def handle_event(event: Event) -> (bool, Path):
+def handle_event(event: Event) -> tuple[bool, Path | None]:
     """
     Handles an incoming pulsar event.
-    If the event has a succesful outcome, the incoming zip will be extracted and an event will be produced.
+    If the event has a successful outcome, the incoming zip will be extracted and an event will be produced.
     """
     if not event.has_successful_outcome():
-        log.info(f"Dropping non succesful event: {event.get_data()}")
-        return False
+        log.info(f"Dropping non successful event: {event.get_data()}")
+        return (False, None)
 
     log.debug(f"Incoming event: {event.get_data()}")
 
@@ -77,7 +77,7 @@ def handle_event(event: Event) -> (bool, Path):
             "message": error_msg,
         }
         send_event(data, outcome, event.correlation_id)
-        return False
+        return (False, None)
 
     # Use the folder of the incoming zip file to derive a part of the target folder.
     # Example: /path/to/sipin/incoming/file.zip -> /path/to/sipin/
