@@ -160,12 +160,11 @@ def send_event(
     )
 
 
-def calc_amount_of_files(folder: Path) -> int:
-    count = 0
-    for p in folder.glob("**/representations/representation_*/data/*"):
-        if p.is_file():
-            count += 1
-    return count
+def calc_amount_of_files(folder: Path | None) -> int:
+    if folder is None:
+        return 0
+    path = "**/representations/**/data/*"
+    return len([p for p in folder.glob(path) if p.is_file()])
 
 
 def calc_sleep(amount_of_files: int) -> int:
@@ -188,9 +187,13 @@ if __name__ == "__main__":
             consumer.acknowledge(msg)
 
             if result_status:
+                # Mediahaven will gladly process any files you throw at it, even if it has no resources left.
+                # To prevent Mediahaven choking itself to death, we wait before feeding it the next SIP.
                 files_found = calc_amount_of_files(extract_path)
                 time_to_sleep = calc_sleep(files_found)
-                log.debug(f"Amount of files found: {files_found}. Time to sleep: {time_to_sleep}")
+                log.debug(
+                    f"Amount of files found: {files_found}. Time to sleep: {time_to_sleep}"
+                )
                 time.sleep(time_to_sleep)
     except KeyboardInterrupt:
         client.close()
