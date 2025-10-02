@@ -168,12 +168,13 @@ def calc_amount_of_files(folder: Path | None) -> int:
 
 
 def calc_sleep(amount_of_files: int) -> int:
-    sleep = 300
     if amount_of_files < 10:
-        return 30
+        base_sleep = 30
     elif amount_of_files < 100:
-        return 120
-    return sleep * sleep_time_coefficient
+        base_sleep = 120
+    else:
+        base_sleep = 300
+    return base_sleep * sleep_time_coefficient
 
 
 if __name__ == "__main__":
