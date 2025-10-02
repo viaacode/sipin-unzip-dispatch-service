@@ -48,7 +48,7 @@ producer_2_x = create_producer(producer_topic_2_x)
 consumer = subscribe()
 
 # Sleep time config
-sleep_time_coefficient = int(
+sleep_time_coefficient = float(
     configParser.app_cfg["unzip-service"]["sleep_time_coefficient"]
 )
 
